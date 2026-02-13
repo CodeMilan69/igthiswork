@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For Raechel 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    body { 
+        margin: 0; height: 100vh; background: #e3a5b3; 
+        font-family: 'Poppins', sans-serif; display: flex; 
+        justify-content: center; align-items: center; 
+        overflow: hidden; touch-action: manipulation;
+        transition: background-color 0.2s;
+    }
+    
+    .card { 
+        background: white; padding: 30px; border-radius: 24px; 
+        width: 85%; max-width: 320px; text-align: center; 
+        box-shadow: 0 20px 60px rgba(0,0,0,.25); 
+        position: relative; z-index: 9999;
+    }
+
+    h2 { font-family: 'Playfair Display'; font-size: 24px; color: #333; margin: 0; }
+    h2 span { color: #C9184A; font-style: italic; }
+
+    .buttonArea { 
+        display: flex; justify-content: center; align-items: center; 
+        gap: 15px; margin-top: 30px; min-height: 160px;
+    }
+    
+    button { 
+        padding: 16px 30px; border: none; border-radius: 40px; 
+        font-size: 18px; cursor: pointer; font-weight: bold; 
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        -webkit-tap-highlight-color: transparent;
+        pointer-events: auto !important;
+        position: relative;
+    }
+
+    #yes { background: #ff4d6d; color: white; }
+    #no { background: #eee; color: #888; }
+    
+    .hint { margin-top: 15px; font-size: 11px; color: #ff85a1; font-style: italic; opacity: 0.8; }
+
+    /* Scene Scaling - Improved for Phone */
+    .scene { position: fixed; inset: 0; display: none; z-index: 10; width: 100%; height: 100%; }
+    
+    @media (max-width: 600px) {
+        .scene { transform: scale(0.65); transform-origin: center center; }
+        #man { top: 35% !important; }
+        #craneContainer { top: 0% !important; }
+    }
+
+    /* Animation Styles */
+    .vibrate { animation: v 0.1s infinite; }
+    @keyframes v { 0% { transform: translate(-50%, -50%) rotate(0.5deg); } 100% { transform: translate(-50%, -50%) rotate(-0.5deg); } }
+
+    #man { position: absolute; top: 40%; left: -150px; z-index: 100; transition: transform 0.1s linear; }
+    #craneContainer { position: absolute; top: 5%; left: -750px; z-index: 300; }
+    
+    #gymBench, #gymBarbell { position: absolute; top: 45%; left: 15%; display: none; }
+    #gymBench { z-index: 5; }
+    #gymBarbell { z-index: 150; pointer-events: none; }
+
+    #armL, #armR { transform-origin: 50px 55px; }
+    #legL, #legR { transform-origin: 50px 100px; }
+    
+    #stickHeart { opacity: 0; transform-origin: center; }
+    .fast-beat { animation: beat 0.25s infinite alternate; }
+    .slow-beat { animation: beat 0.8s infinite alternate; }
+    @keyframes beat { from { transform: scale(1); } to { transform: scale(1.3); } }
+
+    .photo { position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(40px); width: 250px; opacity: 0; transition: 1.5s; z-index: 400; border: 10px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    .photo.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .message { position: absolute; bottom: 40px; width: 100%; text-align: center; font-family: 'Playfair Display'; font-size: 22px; font-weight: 600; font-style: italic; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); opacity: 0; transition: 1s; z-index: 400; pointer-events: none;}
+    .message.show { opacity: 1; }
+</style>
+</head>
+<body id="body">
+
+<div class="card" id="card">
+    <h2>Raechel, <span>will you</span> be my Valentine?</h2>
+    <div class="buttonArea">
+        <button id="yes" onclick="handleYes(event)" ontouchstart="handleYes(event)">Yes 💖</button>
+        <button id="no" onclick="handleNo(event)" ontouchstart="handleNo(event)">No 🙈</button>
+    </div>
+    <div class="hint" id="hint">The 'No' button is currently out of order...</div>
+</div>
+
+<div class="scene" id="scene">
+    <div class="box" id="box">Thank you for saying yes<br><span style="font-size: 16px; font-weight: 400; color: #666;">(like you had a choice)</span></div>
+
+    <div id="gymBench"><svg width="200" height="200" viewBox="0 0 100 100"><rect x="10" y="85" width="80" height="8" fill="#333"/><rect x="25" y="93" width="5" height="7" fill="#333"/><rect x="70" y="93" width="5" height="7" fill="#333"/></svg></div>
+    <div id="gymBarbell"><svg width="200" height="200" viewBox="0 0 100 100"><g id="barbellWrap"><line x1="0" y1="40" x2="100" y2="40" stroke="#444" stroke-width="5"/><circle cx="5" cy="40" r="10" fill="black"/><circle cx="95" cy="40" r="10" fill="black"/></g></svg></div>
+    
+    <div id="craneContainer">
+        <svg width="600" height="500" viewBox="0 0 600 500">
+            <g id="wheels"><circle cx="50" cy="420" r="25" fill="#111"/><circle cx="120" cy="420" r="25" fill="#111"/><circle cx="190" cy="420" r="25" fill="#111"/></g>
+            <rect x="20" y="350" width="220" height="70" rx="10" fill="#222"/>
+            <rect x="40" y="280" width="100" height="80" rx="5" fill="#ffd700" stroke="black" stroke-width="2"/>
+            <text x="90" y="326" font-size="20" text-anchor="middle">😏</text>
+            <path d="M180 350 L500 80 L510 90 L190 360 Z" fill="#ffd700" stroke="black"/>
+            <line id="craneCable" x1="500" y1="85" x2="500" y2="85" stroke="#333" stroke-width="3"/>
+            <g id="magnetGroup"><rect x="460" y="85" width="80" height="30" fill="#444" stroke="black"/><rect x="470" y="115" width="60" height="15" fill="red"/></g>
+        </svg>
+    </div>
+
+    <svg id="man" width="120" height="200" viewBox="0 0 100 150">
+        <g id="manBody">
+            <circle cx="50" cy="25" r="15" stroke="black" stroke-width="3" fill="white"/>
+            <text id="face" x="50" y="31" font-size="18" text-anchor="middle">😤</text>
+            <text id="stickHeart" x="50" y="65" font-size="16" text-anchor="middle">❤️</text>
+            <line x1="50" y1="40" x2="50" y2="100" stroke="black" stroke-width="3"/>
+            <line id="armL" x1="50" y1="55" x2="50" y2="90" stroke="black" stroke-width="4" />
+            <line id="armR" x1="50" y1="55" x2="50" y2="90" stroke="black" stroke-width="4" />
+            <text id="flowers" x="50" y="75" font-size="30" text-anchor="middle" opacity="0">💐</text>
+            <line id="legL" x1="50" y1="100" x2="50" y2="145" stroke="black" stroke-width="3" />
+            <line id="legR" x1="50" y1="100" x2="50" y2="145" stroke="black" stroke-width="3" />
+        </g>
+    </svg>
+
+    <img src="photo.png" class="photo" id="photo">
+    <div class="message" id="msg">I am pretty sure these flowers won’t go to waste,<br>so will you accept these?</div>
+</div>
+
+<script>
+let yesScale = 1;
+const card = document.getElementById("card"), scene = document.getElementById("scene"), body = document.getElementById("body");
+const man = document.getElementById("man"), manBody = document.getElementById("manBody"), box = document.getElementById("box"), crane = document.getElementById("craneContainer"), face = document.getElementById("face");
+const gymBench = document.getElementById("gymBench"), gymBar = document.getElementById("gymBarbell"), barbellWrap = document.getElementById("barbellWrap");
+const aL = document.getElementById("armL"), aR = document.getElementById("armR"), lL = document.getElementById("legL"), lR = document.getElementById("legR");
+const stickHeart = document.getElementById("stickHeart"), flowers = document.getElementById("flowers"), photo = document.getElementById("photo"), msg = document.getElementById("msg");
+
+window.handleNo = function(e) {
+    e.preventDefault();
+    yesScale += 0.5;
+    document.getElementById("yes").style.transform = `scale(${yesScale})`;
+    body.style.backgroundColor = "#ff4d6d";
+    setTimeout(() => body.style.backgroundColor = "#e3a5b3", 150);
+};
+
+window.handleYes = function(e) {
+    e.preventDefault();
+    card.style.display = "none";
+    scene.style.display = "block";
+    intro();
+};
+
+function updateWalk(s = 0.15) {
+    let t = Date.now() * 0.008;
+    lL.style.transform = `rotate(${Math.sin(t) * 35}deg)`; 
+    lR.style.transform = `rotate(${-Math.sin(t) * 35}deg)`;
+    aL.style.transform = `rotate(${-Math.sin(t) * 20}deg)`; 
+    aR.style.transform = `rotate(${Math.sin(t) * 20}deg)`;
+}
+
+function intro() {
+    let pos = -150;
+    const w = setInterval(() => {
+        pos += 4; man.style.left = pos + "px"; updateWalk();
+        if (pos >= window.innerWidth/2 - 120) {
+            clearInterval(w); box.classList.add("vibrate");
+            setTimeout(() => {
+                box.classList.remove("vibrate"); face.textContent = "🤔";
+                setTimeout(() => { 
+                    man.style.transform = "scaleX(-1)";
+                    const e = setInterval(() => { 
+                        pos -= 5; man.style.left = pos + "px"; updateWalk();
+                        if (pos < -150) { clearInterval(e); gym(); }
+                    }, 16);
+                }, 800);
+            }, 1000);
+        }
+    }, 16);
+}
+
+function gym() {
+    gymBench.style.display = gymBar.style.display = "block"; 
+    man.style.transform = "scaleX(1)";
+    let pos = -150;
+    const w = setInterval(() => {
+        pos += 4; man.style.left = pos + "px"; updateWalk();
+        if (pos >= window.innerWidth * 0.15) {
+            clearInterval(w);
+            man.style.transform = "translate(40px, 110px) rotate(-90deg)";
+            let start = Date.now();
+            const lift = setInterval(() => {
+                let elapsed = Date.now() - start;
+                let dy = Math.sin(elapsed / 400) * 25 + 25;
+                face.textContent = Math.cos(elapsed / 400) < 0 ? "😫" : "😤";
+                barbellWrap.style.transform = `translateY(${dy}px)`;
+                
+                // FIXED LEG SHAKE logic
+                if (elapsed > 3000) {
+                    let shake = Math.sin(Date.now() * 0.05) * 8;
+                    lL.style.transform = `rotate(${shake}deg)`;
+                    lR.style.transform = `rotate(${-shake}deg)`;
+                }
+
+                if (elapsed > 7000) {
+                    clearInterval(lift); man.style.transform = "scaleX(1)"; 
+                    man.style.left = "-150px"; 
+                    gymBench.style.display = gymBar.style.display = "none";
+                    strongPush();
+                }
+            }, 16);
+        }
+    }, 16);
+}
+
+function strongPush() {
+    let pos = -150;
+    const w = setInterval(() => {
+        pos += 4; man.style.left = pos + "px"; updateWalk();
+        if (pos >= window.innerWidth/2 - 120) {
+            clearInterval(w);
+            let pushDist = 0;
+            const shoving = setInterval(() => {
+                pushDist += 2; man.style.left = (pos + pushDist) + "px";
+                box.style.transform = `translate(calc(-50% + ${pushDist}px), -50%)`;
+                if (pushDist >= 80) {
+                    clearInterval(shoving); face.textContent = "😖"; 
+                    setTimeout(() => { 
+                        man.style.transform = "scaleX(-1)";
+                        const e = setInterval(() => { 
+                            pos -= 5; man.style.left = pos + "px"; updateWalk();
+                            if (pos < -150) { clearInterval(e); craneSequence(pushDist); }
+                        }, 16);
+                    }, 1000);
+                }
+            }, 16);
+        }
+    }, 16);
+}
+
+function craneSequence(boxOffset) {
+    let cx = -750;
+    const target = (window.innerWidth/2 + boxOffset) - 470;
+    const d = setInterval(() => {
+        cx += 6; crane.style.left = cx + "px";
+        if (cx >= target) {
+            clearInterval(d);
+            let y = 0;
+            const l = setInterval(() => {
+                y += 2;
+                document.getElementById("craneCable").setAttribute("y2", 85 + y);
+                document.getElementById("magnetGroup").style.transform = `translateY(${y}px)`;
+                if (y >= 215) {
+                    clearInterval(l);
+                    setTimeout(() => {
+                        box.style.transition = "0.3s linear"; 
+                        box.style.top = "35%"; // Lifts it
+                        setTimeout(() => {
+                            const drive = setInterval(() => {
+                                cx += 7; crane.style.left = cx + "px";
+                                box.style.left = (window.innerWidth/2 + boxOffset + (cx-target)) + "px";
+                                if (cx > window.innerWidth + 500) { clearInterval(drive); final(); }
+                            }, 16);
+                        }, 500);
+                    }, 500);
+                }
+            }, 16);
+        }
+    }, 16);
+}
+
+function final() {
+    let pos = window.innerWidth + 100;
+    man.style.transform = "scaleX(-1)";
+    const w = setInterval(() => {
+        pos -= 4; man.style.left = pos + "px"; updateWalk(0.2);
+        if (pos <= window.innerWidth/2 - 60) {
+            clearInterval(w);
+            man.style.transform = "scaleX(1)";
+            face.textContent = "🥹"; flowers.style.opacity = "1";
+            stickHeart.style.opacity = "1"; stickHeart.classList.add("slow-beat");
+            photo.classList.add("show"); msg.classList.add("show");
+        }
+    }, 16);
+}
+</script>
+</body>
+</html>
